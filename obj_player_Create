@@ -1,0 +1,106 @@
+// --- GENERAL GAME STATE ---
+game_state = "playing";  // "playing", "thinking", "shop_prompt", "shop", "game_over"
+
+// --- QUESTIONS (20 fixed) ---
+// Do NOT change the array length; you can edit the text/answers.
+parry_question[0] = "What percentage of Earth's surface is water?";
+parry_answer[0] = 71;
+
+parry_question[1] = "What percentage of air is oxygen?";
+parry_answer[1] = 21;
+
+parry_question[2] = "What percentage of Earth's surface is land?";
+parry_answer[2] = 29;
+
+parry_question[3] = "What percentage of the human body is water?";
+parry_answer[3] = 60;
+
+parry_question[4] = "What percentage of the world's population is European?";
+parry_answer[4] = 10;
+
+parry_question[5] = "Roughly what percentage of the global population uses a smartphone?";
+parry_answer[5] = 67;
+
+parry_question[6] = "What percentage of the world uses the internet?";
+parry_answer[6] = 63;
+
+parry_question[7] = "What percentage of the world's adults are literate?";
+parry_answer[7] = 87;
+
+parry_question[8] = "What percentage of global electricity comes from renewable sources?";
+parry_answer[8] = 30;
+
+parry_question[9] = "What percentage of Earth's oxygen is produced by oceans?";
+parry_answer[9] = 50;
+
+parry_question[10] = "What percentage of plastic waste ends up in the ocean?";
+parry_answer[10] = 15;
+
+parry_question[11] = "What percentage of the world lives in cities?";
+parry_answer[11] = 56;
+
+parry_question[12] = "What percentage of the world lives in rural areas?";
+parry_answer[12] = 44;
+
+parry_question[13] = "What percentage of the global population is under 30?";
+parry_answer[13] = 52;
+
+parry_question[14] = "What percentage of the world is 65 or older?";
+parry_answer[14] = 9;
+
+parry_question[15] = "What percentage of the world has access to clean drinking water?";
+parry_answer[15] = 71;
+
+parry_question[16] = "What percentage of the world accesses the internet via mobile?";
+parry_answer[16] = 95;
+
+parry_question[17] = "What percentage of new power capacity worldwide is renewable?";
+parry_answer[17] = 80;
+
+parry_question[18] = "What percentage of the world lives in Asia?";
+parry_answer[18] = 60;
+
+parry_question[19] = "What percentage of the world uses social media?";
+parry_answer[19] = 58;
+
+total_questions = 20;
+
+// --- QUESTIONS COUNTER ---
+question_count = 0;
+
+// --- HP ---
+hp_max = 100;
+hp = hp_max;
+
+// --- STREAK ---
+streak = 0;
+streak_time_bonus = 0;
+
+// --- CURRENCY ---
+currency = 0;
+item1_cost = 200;      // +3s thinking time
+item2_cost = 400;      // +10 HP
+item3_cost = 600;      // safer near‑parry (-5 HP loss)
+
+item1_owned = false;
+moderate_near_loss = false;
+
+// --- CURRENT QUESTION DATA ---
+true_parry_percent = 50;
+current_question_text = "";
+current_difficulty_band = 0;  // 0=easy, 1=medium, 2=hard
+
+// --- THINKING TIMER ---
+parity_thinking_time = 30;
+
+// --- ANSWER DISPLAY ---
+show_answer = false;
+answer_time = 0;
+show_answer_time = 1.5;
+
+// --- ENEMY INSTANCE (for destroy/currency) ---
+enemy_instance = noone;
+
+// --- START THE GAME: FIRST QUESTION ---
+question_count = 1;
+scr_spawn_question();
