@@ -1,0 +1,118 @@
+// --- 1. HUD ---
+if (game_state != "game_over") {
+    draw_text(10, 10, "HP: " + string(floor(hp)) + " / " + string(hp_max));
+    draw_text(10, 30, "Streak: " + string(streak) + " (+" + string(streak_time_bonus) + "s)");
+    draw_text(10, 50, "Question: " + string(question_count) + " / " + string(total_questions));
+
+    var diff_name = "Unknown";
+    switch (current_difficulty_band) {
+        case 0: diff_name = "Easy";   break;
+        case 1: diff_name = "Medium"; break;
+        case 2: diff_name = "Hard";   break;
+    }
+    draw_text(10, 70, "Difficulty: " + diff_name);
+
+    draw_text(10, 90, "Money: $" + string(currency));
+}
+
+// --- 2. THINKING PHASE ---
+if (game_state == "thinking") {
+    draw_text(100, 400, current_question_text);
+    draw_rectangle(100, 450, 400, 480, false);
+    draw_text(110, 455, keyboard_string);
+
+    if (floor(current_time / 300) mod 2 == 0) {
+        draw_text(110 + string_width(keyboard_string), 455, "_");
+    }
+
+    parity_thinking_time -= delta_time;
+
+    if (keyboard_check_pressed(vk_enter)) {
+        var input_str = keyboard_string;
+        if (string_length(input_str) > 0) {
+            player_guess_percent = real(input_str);
+            scr_judge_parity();
+        }
+    }
+
+    if (parity_thinking_time <= 0) {
+        player_guess_percent = 0;
+        scr_judge_parity();
+    }
+}
+
+// --- 3. ANSWER FEEDBACK ---
+if (show_answer) {
+    draw_text(100, 500, "Correct answer was: " + string(floor(true_parry_percent)) + "%");
+    answer_time -= delta_time;
+    if (answer_time <= 0) {
+        show_answer = false;
+    }
+}
+
+// --- 4. SHOP PROMPT ---
+if (game_state == "shop_prompt") {
+    draw_text(100, 100, "SHOP TIME");
+    draw_text(100, 130, "Y = Enter shop");
+    draw_text(100, 160, "N = Skip");
+
+    if (keyboard_check_pressed(ord("Y"))) {
+        game_state = "shop";
+    }
+    else if (keyboard_check_pressed(ord("N"))) {
+        game_state = "playing";
+        scr_spawn_question();
+    }
+}
+
+// --- 5. SHOP MENU ---
+if (game_state == "shop") {
+    var y_shop = 100;  // use a local name, not "y"
+    draw_text(100, y_shop, "SHOP MENU (ESC to leave)"); y_shop += 30;
+
+    draw_text(120, y_shop, "1. +3s thinking time ($" + string(item1_cost) + ")");
+    if (item1_owned) { draw_text(400, y_shop, "OWNED"); }
+    y_shop += 20;
+
+    draw_text(120, y_shop, "2. +10 HP ($" + string(item2_cost) + ")");
+    if (hp_max > 100) { draw_text(400, y_shop, "OWNED"); }
+    y_shop += 20;
+
+    draw_text(120, y_shop, "3. Safer parry (-5 HP loss) ($" + string(item3_cost) + ")");
+    if (moderate_near_loss) { draw_text(400, y_shop, "OWNED"); }
+    y_shop += 30;
+
+    draw_text(100, y_shop, "Current money: $" + string(currency));
+
+    if (keyboard_check_pressed(ord("1"))) {
+        if (!item1_owned && currency >= item1_cost) {
+            currency -= item1_cost;
+            streak_time_bonus += 3;
+            item1_owned = true;
+        }
+    }
+    else if (keyboard_check_pressed(ord("2"))) {
+        if (currency >= item2_cost) {
+            currency -= item2_cost;
+            hp_max += 10;
+            hp += 10;
+        }
+    }
+    else if (keyboard_check_pressed(ord("3"))) {
+        if (currency >= item3_cost) {
+            currency -= item3_cost;
+            moderate_near_loss = true;
+        }
+    }
+
+    if (keyboard_check_pressed(vk_escape)) {
+        game_state = "playing";
+        scr_spawn_question();
+    }
+}
+
+// --- 6. GAME OVER ---
+if (game_state == "game_over") {
+    draw_text(150, 200, "GAME OVER");
+    draw_text(150, 240, "You answered 20 questions!");
+}
